@@ -103,9 +103,19 @@ int main(int argc, char* argv[]) {
 
 	  ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
-	  for(int i = 0; i < fouriers.size(); i++){
+	  float offx = 40.0f + p.x; //x offset
+	  float offy = 200.0f + p.y; //y offset
+
+	  float time = 1; //TEMP
+	  
+	  for(unsigned int i = 0; i < fouriers.size(); i++){
 	    FourierElement fe = fouriers[i];
-	    ImGui::GetWindowDrawList()->AddCircle(ImVec2(p.x + fe.x + fe.amp*0.5f, p.y + fe.y + fe.amp*0.5f), fe.amp*0.5f, ImColor(ccol), 20, 1.0f); 
+	    float centx = offx + fe.x;
+	    float centy = offy + fe.y;
+	    float destx = centx + fe.amp * cos(TAU * fe.freq * time + fe.phase);
+	    float desty = centy + fe.amp * sin(TAU * fe.freq * time + fe.phase);
+	    ImGui::GetWindowDrawList()->AddCircle(ImVec2(offx + fe.x + fe.amp*0.5f, offy + fe.y + fe.amp*0.5f), fe.amp*0.5f, ImColor(ccol), i + 5, 1.0f); 
+	    ImGui::GetWindowDrawList()->AddLine(ImVec2(centx, centy), ImVec2(destx, desty), ImColor(lcol), 1.0f);
 	  }
 	  
 	  ImGui::End();
