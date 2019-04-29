@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
   }
 
   //data = get_data_from_file("peace.txt");
-  data = get_data_from_file("diag_line.txt");
+  data = get_data_from_file("data/diag_line.txt");
   
   //fill fourier
   vector<FourierElement> fouriers;
