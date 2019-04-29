@@ -34,8 +34,8 @@ int main(int argc, char* argv[]) {
   
   //fill fourier
   vector<FourierElement> fouriers;
-  for(int i = 0; i < 40; i++){
-    fouriers.push_back(fourier(data, i + 1));
+  for(int i = -40; i <= 40; i++){
+    fouriers.push_back(fourier(data, i));
   }
 
   //sort fourier
