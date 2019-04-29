@@ -12,6 +12,8 @@
 #pragma comment(lib, "legacy_stdio_definitions")
 #endif
 
+#define TIME_STEP 0.01f
+
 //error handler for GLFW
 static void glfw_error_callback(int error, const char* description) {
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
@@ -61,8 +63,10 @@ int main(int argc, char* argv[]) {
     ImVec4 clear_color = ImVec4(0.50f, 0.50f, 0.50f, 1.00f); //background color
 
     // Main loop
+    float time = 0;
     while (!glfwWindowShouldClose(window))
     {
+      if(time >= TAU) time = 0;
         // Poll and handle events (inputs, window resize, etc.)
         // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
         // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application.
@@ -99,14 +103,12 @@ int main(int argc, char* argv[]) {
 	  float th = 1.0f;
 	  ImGui::GetWindowDrawList()->AddCircle(ImVec2(x + sz*0.5f, y + sz*0.5f), sz*0.5f, ImColor(ccol), 20, th); x += sz + spacing;  // Circle
 	  
-	  ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+	  ImGui::Text("Current time: %.3f", time);               // Display some text (you can use a format strings too)
 
 	  ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
-	  float offx = 40.0f + p.x; //x offset
-	  float offy = 200.0f + p.y; //y offset
-
-	  float time = 1; //TEMP
+	  float offx = 640.0f + p.x; //x offset
+	  float offy = 400.0f + p.y; //y offset
 	  
 	  for(unsigned int i = 0; i < fouriers.size(); i++){
 	    FourierElement fe = fouriers[i];
@@ -114,7 +116,7 @@ int main(int argc, char* argv[]) {
 	    float centy = offy + fe.y;
 	    float destx = centx + fe.amp * cos(TAU * fe.freq * time + fe.phase);
 	    float desty = centy + fe.amp * sin(TAU * fe.freq * time + fe.phase);
-	    ImGui::GetWindowDrawList()->AddCircle(ImVec2(offx + fe.x + fe.amp*0.5f, offy + fe.y + fe.amp*0.5f), fe.amp*0.5f, ImColor(ccol), i + 5, 1.0f); 
+	    ImGui::GetWindowDrawList()->AddCircle(ImVec2(centx, centy), fe.amp*0.5f, ImColor(ccol), i + 5, 1.0f); 
 	    ImGui::GetWindowDrawList()->AddLine(ImVec2(centx, centy), ImVec2(destx, desty), ImColor(lcol), 1.0f);
 	  }
 	  
@@ -139,6 +141,9 @@ int main(int argc, char* argv[]) {
 
         glfwMakeContextCurrent(window);
         glfwSwapBuffers(window);
+
+	//increment time
+	time += TIME_STEP;
     }
 
     // Cleanup
