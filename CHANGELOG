@@ -1,0 +1,9 @@
+04/22/2019 - began project, talked to math professor about how to go about using Fourier transforms, and started writing fourier.cpp to hold the math
+
+04/23/2019 - began leaning how to use Dear ImGui, the graphics library I'm using
+
+04/26/2019 - consulted with professor again, found error in my conversion from complex to cartesian from a misuse of Euler's formula
+
+04/28/2019 - tried using base GLFW instead of ImGui to draw, ran into a lot of trouble through the use of VBO plus matrix projection
+
+04/29/2019 - finished graphics to graph the fourier transformed data, added sliders to control depth, scale, and time, added color wheels for all four aspects (background, epicycle, line, graph), and added test data for submission use
