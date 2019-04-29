@@ -3,6 +3,7 @@
 #include "imgui/imgui_impl_opengl2.h"
 #include <stdio.h>
 #include "fourier.cpp"
+#include "read_data.cpp"
 #ifdef __APPLE__
 #define GL_SILENCE_DEPRECATION
 #endif
@@ -31,10 +32,14 @@ int main(int argc, char* argv[]) {
     arr[1] = i * 2 + 1;
     data.push_back(arr);
   }
+
+  //data = get_data_from_file("peace.txt");
+  data = get_data_from_file("diag_line.txt");
   
   //fill fourier
   vector<FourierElement> fouriers;
-  for(int i = -40; i <= 40; i++){
+  for(int i = -1 * data.size(); i <= (signed int)data.size(); i++){
+    if(i == 0) continue; //skips 0 so we don't have a circle that sits still
     fouriers.push_back(fourier(data, i));
   }
 
@@ -100,7 +105,7 @@ int main(int argc, char* argv[]) {
 	  static ImVec4 gcol = ImVec4(0.0f, 1.0f, 1.0f, 1.0f);
 	  static float time_step = 0.0005f;
 	  //time_step = TAU / (float)fouriers.size();
-	  static int depth = fouriers.size();
+	  static int depth = fouriers.size() > 30 ? 30 : fouriers.size();
 
 	  ImGui::DragInt("Depth", &depth, 1.0f, 1, fouriers.size(), "%d");
 	  ImGui::DragFloat("Speed", &time_step, 0.0001f, 0.0f, 0.01f, "%.4f");
@@ -158,7 +163,7 @@ int main(int argc, char* argv[]) {
 	  }
 	  
 	  ImGui::End();
-        }
+	}
 
         // Rendering
         ImGui::Render();
