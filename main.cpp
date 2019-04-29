@@ -2,6 +2,7 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl2.h"
 #include <stdio.h>
+#include "fourier.cpp"
 #ifdef __APPLE__
 #define GL_SILENCE_DEPRECATION
 #endif
@@ -17,6 +18,21 @@ static void glfw_error_callback(int error, const char* description) {
 }
 
 int main(int argc, char* argv[]) {
+  //fill data
+  vector<array<double, 2>> data;
+  for(int i = 0; i < 40; i++){
+    array<double, 2> arr;
+    arr[0] = i * 2;
+    arr[1] = i * 2 + 1;
+    data.push_back(arr);
+  }
+  
+  //fill fourier
+  vector<FourierElement> fouriers;
+  for(int i = 0; i < 40; i++){
+    fouriers.push_back(fourier(data, i + 1));
+  }
+  
     // Setup window
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit()) return -1;
@@ -41,9 +57,8 @@ int main(int argc, char* argv[]) {
     ImGui_ImplOpenGL2_Init();
 
     // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
-    bool show_demo_window = true;
-    bool show_another_window = false;
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    bool show_demo_window = false;
+    ImVec4 clear_color = ImVec4(0.50f, 0.50f, 0.50f, 1.00f); //background color
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -61,40 +76,39 @@ int main(int argc, char* argv[]) {
         ImGui::NewFrame();
 
         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-        if (show_demo_window)
-            ImGui::ShowDemoWindow(&show_demo_window);
+        if (show_demo_window) ImGui::ShowDemoWindow(&show_demo_window);
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
         {
-            static float f = 0.0f;
-            static int counter = 0;
+	  ImGui::Begin("Fourier Graphing Window"); //Create window
 
-            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+	  static float sz = 36.0f;
+	  static ImVec4 ccol = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+	  static ImVec4 lcol = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
+	  static ImVec4 gcol = ImVec4(0.0f, 1.0f, 1.0f, 1.0f);
+	  
+	  //ImGui::DragFloat("Size", &sz, 0.2f, 2.0f, 72.0f, "%.0f");
 
-            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-            ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-            ImGui::Checkbox("Another Window", &show_another_window);
+	  ImGui::ColorEdit3("Background Color", (float*)&clear_color); // Edit 3 floats representing a color
+	  ImGui::ColorEdit4("Circle Color", &ccol.x);
+	  ImGui::ColorEdit4("Line Color", &lcol.x);
+	  ImGui::ColorEdit4("Graph Color", &gcol.x);
+	  
+	  const ImVec2 p = ImGui::GetCursorScreenPos();
+	  float x = p.x + 4.0f, y = p.y + 16.0f, spacing = 8.0f;
+	  float th = 1.0f;
+	  ImGui::GetWindowDrawList()->AddCircle(ImVec2(x + sz*0.5f, y + sz*0.5f), sz*0.5f, ImColor(ccol), 20, th); x += sz + spacing;  // Circle
+	  
+	  ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
 
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+	  ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
-            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-                counter++;
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
-
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-            ImGui::End();
-        }
-
-        // 3. Show another simple window.
-        if (show_another_window)
-        {
-            ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-            ImGui::Text("Hello from another window!");
-            if (ImGui::Button("Close Me"))
-                show_another_window = false;
-            ImGui::End();
+	  for(int i = 0; i < fouriers.size(); i++){
+	    FourierElement fe = fouriers[i];
+	    ImGui::GetWindowDrawList()->AddCircle(ImVec2(p.x + fe.x + fe.amp*0.5f, p.y + fe.y + fe.amp*0.5f), fe.amp*0.5f, ImColor(ccol), 20, 1.0f); 
+	  }
+	  
+	  ImGui::End();
         }
 
         // Rendering
