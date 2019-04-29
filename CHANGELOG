@@ -6,4 +6,4 @@
 
 04/28/2019 - tried using base GLFW instead of ImGui to draw, ran into a lot of trouble through the use of VBO plus matrix projection
 
-04/29/2019 - finished graphics to graph the fourier transformed data, added sliders to control depth, scale, and time, added color wheels for all four aspects (background, epicycle, line, graph), and added test data for submission use
+04/29/2019 - finished graphics to graph the fourier transformed data, added sliders to control depth, scale, and time, added color wheels for all four aspects (background, epicycle, line, graph). added get_data_from_file function in read_data.cpp, and added test data .txt files in data/ directory.
