@@ -52,7 +52,7 @@ FourierElement fourier(vector<array<double, 2>> data, int waves){
   return fe;
 }
 
-int main(){
+/*int main(){
   vector<array<double, 2>> data;
   for(int i = 0; i < 19; i++){
     array<double, 2> temp;
@@ -65,5 +65,5 @@ int main(){
     cout << fe.to_str() << endl;
   }
 }
-  
+*/  
     
