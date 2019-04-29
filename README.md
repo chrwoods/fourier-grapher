@@ -8,4 +8,4 @@ Building this is done by simply calling 'make', however these graphics libraries
 
 Once the building is done, just call ./fourier_grapher, and you should be good to go!
 
-More to come in the future, thanks to github.com/ocornut for having ImGui ready to use, and thanks to me for spending way too much time piecing together how to use ImGui from its meager documentation.
+More to come in the future, thanks to my Theory of Linear Algebra professor, Dr Roettger, for helping me piece together how to use fourier transforms in the context of epicycle graphing, github.com/ocornut for having ImGui ready to use, and thanks to me for spending way too much time piecing together how to use ImGui from its meager documentation.
