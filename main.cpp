@@ -24,6 +24,9 @@ bool compareFourierElements(FourierElement f1, FourierElement f2){
 }
 
 int main(int argc, char* argv[]) {
+  const char* filename = "data/diag_line.txt";
+  if(argc > 1) filename = argv[1];
+  
   //fill data
   vector<array<double, 2>> data;
   for(int i = 0; i < 40; i++){
@@ -34,7 +37,8 @@ int main(int argc, char* argv[]) {
   }
 
   //data = get_data_from_file("peace.txt");
-  data = get_data_from_file("data/diag_line.txt");
+  data = get_data_from_file(filename);
+  //data = get_normalized_data_from_file(filename);
   
   //fill fourier
   vector<FourierElement> fouriers;
@@ -103,15 +107,18 @@ int main(int argc, char* argv[]) {
 	  static ImVec4 ccol = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 	  static ImVec4 lcol = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
 	  static ImVec4 gcol = ImVec4(0.0f, 1.0f, 1.0f, 1.0f);
-	  static float time_step = 0.0005f;
+	  static float time_step = TAU/fouriers.size();/*0.0005f;*/
 	  //time_step = TAU / (float)fouriers.size();
 	  static int depth = fouriers.size() > 30 ? 30 : fouriers.size();
 
 	  ImGui::DragInt("Depth", &depth, 1.0f, 1, fouriers.size(), "%d");
-	  ImGui::DragFloat("Speed", &time_step, 0.0001f, 0.0f, 0.01f, "%.4f");
-
-	  static float scalar = 0.07f; //scales down the grapher
-	  ImGui::DragFloat("Scale", &scalar, 0.01f, 0.01f, 1.0f, "%.2f");
+	  //ImGui::DragFloat("Speed", &time_step, 0.0001f, 0.0f, 0.01f, "%.4f");
+	  static int speed = 1;
+	  ImGui::DragInt("Speed", &speed, 1.0f, 0, 50, "%d");
+	  time_step = .0001f * speed;
+	  
+	  static float scalar = 1.0f; //scales down the grapher
+	  ImGui::DragFloat("Scale", &scalar, 0.05f, 0.05f, 5.0f, "%.2f");
 	  
 	  ImGui::ColorEdit3("Background Color", (float*)&clear_color); // Edit 3 floats representing a color
 	  ImGui::ColorEdit4("Circle Color", &ccol.x);
@@ -150,17 +157,17 @@ int main(int argc, char* argv[]) {
 	    ImGui::GetWindowDrawList()->AddLine(prev_point, ImVec2(destx, desty), ImColor(gcol), 1.0f);
 	  }
 	  prev_point = ImVec2(destx, desty);*/
-	  points.push_back(ImVec2(destx, desty));
+	  if(speed > 0) points.push_back(ImVec2(destx, desty));
 	  for(unsigned int i = 1; i < points.size(); i++){
 	    ImGui::GetWindowDrawList()->AddLine(points[i - 1], points[i], ImColor(gcol), 1.0f);
 	  }
 	  
 	  //increment time
 	  time += time_step;
-	  if(time > TAU){
+	  /*if(time > TAU){
 	    time -= TAU;
 	    points.clear();
-	  }
+	    }*/
 	  
 	  ImGui::End();
 	}
