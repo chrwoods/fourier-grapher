@@ -42,9 +42,12 @@ FourierElement fourier(vector<array<double, 2>> data, int waves){
   for(int n = 0; n < N; n++){
     double dx = data[n][0];
     double dy = data[n][1];
-    x += dx * cos(TAU * waves * n / N) - dy * sin(TAU * waves * n / N);
-    y += dy * cos(TAU * waves * n / N) + dx * sin(TAU * waves * n / N);
+    //invert sin because of the complex conjugate (direction change)
+    x += dx * cos(TAU * waves * n / N) + dy * sin(TAU * waves * n / N);
+    y += dy * cos(TAU * waves * n / N) - dx * sin(TAU * waves * n / N);
   }
+  x /= N;
+  y /= N;
   //calculate circle stuff
   double amp = sqrt(x * x + y * y); //radius
   double phase = atan2(y, x); //starting position to rotate from (probably)
