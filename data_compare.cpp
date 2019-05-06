@@ -12,7 +12,7 @@ int main(int argc, char* argv[]) {
   //fill fourier
   vector<FourierElement> fouriers;
   for(int i = -1 * data.size(); i <= (signed int)data.size(); i++){
-    if(i == 0) continue; //skips 0 so we don't have a circle that sits still
+    if(i <= 0) continue; //skips 0 so we don't have a circle that sits still
     fouriers.push_back(fourier(data, i));
   }
 
@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
       y += fe.amp * sin(TAU * fe.freq * (i / (double)data.size()) + fe.phase);
     }
     cout << to_string(i) << ": expected: " << to_string(data[i][0]) << ", " << to_string(data[i][1]); 
-    cout << ", calculated: " << to_string(x/2) << ", " << to_string(y/2) << endl;
+    cout << ", calculated: " << to_string(x) << ", " << to_string(y) << endl;
     //calculate the in-between
     if(i == data.size() - 1) break;
     cout << to_string(i) << ".5: expected: " << to_string((data[i][0] + data[i + 1][0]) / 2.0) << ", " << to_string((data[i][1] + data[i + 1][1]) / 2.0);
@@ -38,6 +38,6 @@ int main(int argc, char* argv[]) {
       y += fe.amp * sin(TAU * fe.freq * ((i + 0.5) / (double)data.size()) + fe.phase);
     }
 
-    cout << ", calculated: " << to_string(x/2) << ", " << to_string(y/2) << endl;
+    cout << ", calculated: " << to_string(x) << ", " << to_string(y) << endl;
   }
 }
