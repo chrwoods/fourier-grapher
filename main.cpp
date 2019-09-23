@@ -36,7 +36,6 @@ int main(int argc, char* argv[]) {
     data.push_back(arr);
   }
 
-  //data = get_data_from_file("peace.txt");
   data = get_data_from_file(filename);
   //data = get_normalized_data_from_file(filename);
   
@@ -74,7 +73,7 @@ int main(int argc, char* argv[]) {
     ImGui_ImplOpenGL2_Init();
 
     // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
-    bool show_demo_window = false;
+
     ImVec4 clear_color = ImVec4(0.50f, 0.50f, 0.50f, 1.00f); //background color
 
     // Main loop
@@ -96,11 +95,9 @@ int main(int argc, char* argv[]) {
         ImGui_ImplOpenGL2_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-
-        // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-        if (show_demo_window) ImGui::ShowDemoWindow(&show_demo_window);
-
-        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
+	ImGui::SetNextWindowPos(ImVec2(0, 0));
+	//ImGui::Begin("", &open, ImVec2(576, 680), 0.9f, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_MenuBar);
+	ImGui::SetNextWindowSize(ImVec2(1280, 720));	
         {
 	  ImGui::Begin("Fourier Graphing Window"); //Create window
 
@@ -134,7 +131,7 @@ int main(int argc, char* argv[]) {
 	  
 	  const ImVec2 p = ImGui::GetCursorScreenPos();
 	  
-	  ImGui::Text("Current time: %.3f", time);               // Display some text (you can use a format strings too)
+	  ImGui::Text("Current time: %.3f", time);
 
 	  ImGui::Text("Running at %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
